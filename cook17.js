@@ -82,7 +82,7 @@ function onAllCookies(cookies) {
         midTime
       );
       console.log('pan right');
-      midTime += 0.5;
+      midTime += 0.25;
       // midTimeKeeper += 500;
     }
   });
