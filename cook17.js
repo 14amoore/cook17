@@ -19,11 +19,16 @@ const bassSynth = new Tone.MembraneSynth({
     release: 1,
     releaseCurve: 'ripple'
   }
-});
+}).toMaster();
 
 const panVol = new Tone.PanVol().toMaster();
+const panVol2 = new Tone.PanVol().toMaster();
 
-bassSynth.connect(panVol);
+const midSynth = new Tone.MembraneSynth();
+midSynth.connect(panVol);
+
+const midSynth2 = new Tone.MembraneSynth();
+midSynth2.connect(panVol2);
 
 const noiseSynth = new Tone.NoiseSynth({
   noise: {
@@ -53,11 +58,11 @@ function onAllCookies(cookies) {
 
   const secureCookies = cookies.filter(c => c.secure);
 
-  const longlivedCookies = cookies.filter(c => c.expirationDate > 1615792811);
-  const shortLivedCookies = cookies.filter(c => c.expirationDate < 1615792811);
+  const date = Date.now();
+  const weekOut = date + 604800000;
 
-  let sparkleTime = new Tone.Time('+0');
-  let sparkleTimeKeeper = 0;
+  const longlivedCookies = cookies.filter(c => c.expirationDate > weekOut);
+  const shortLivedCookies = cookies.filter(c => c.expirationDate < weekOut);
 
   console.log(shortLivedCookies, longlivedCookies);
 
@@ -66,7 +71,37 @@ function onAllCookies(cookies) {
     shortLivedCookies.length - longlivedCookies.length;
   metal.triggerAttackRelease();
 
-  const allCookies = cookies.length;
+  let midTime = new Tone.Time('+0');
+  // let midTimeKeeper = 0;
+  cookies.forEach(c => {
+    if (c.session) {
+      panVol.pan.value = 1;
+      midSynth.triggerAttackRelease(
+        cookies.length + c.domain.length,
+        0.25,
+        midTime
+      );
+      console.log('pan right');
+      midTime += 0.5;
+      // midTimeKeeper += 500;
+    }
+  });
+
+  let otherTime = new Tone.Time('+0.125');
+  // let otherTimeKeeper = 0;
+  cookies.forEach(c => {
+    panVol2.pan.value = -1;
+    panVol2.volume.value = -10;
+    console.log(c.hostOnly);
+    midSynth2.triggerAttackRelease(
+      cookies.length + c.domain.length,
+      0.125,
+      otherTime
+    );
+    console.log('pan left');
+    otherTime += 0.125;
+    // otherTimeKeeper += 500;
+  });
 
   let bassTime = new Tone.Time('+0');
   let bassTimeKeeper = 0;
@@ -78,6 +113,8 @@ function onAllCookies(cookies) {
   });
 
   const bassRest = bassTimeKeeper * 1.5;
+
+  const allCookies = cookies.length;
 
   osc.frequency.value = 60;
   console.log(allCookies);
