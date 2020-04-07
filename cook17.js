@@ -128,9 +128,9 @@ function onAllCookies(cookies) {
     startBtn.disabled = false;
   }
   stopBtn.addEventListener('click', timerStop);
+  stopBtn.addEventListener('click', osc.stop());
   osc.start('+0').stop(`+${allCookieString}`);
 }
-stopBtn.addEventListener('click', osc.stop());
 
 function requestAllCookies() {
   this.disabled = true;
