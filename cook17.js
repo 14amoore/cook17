@@ -8,10 +8,13 @@ let timer;
 
 const startBtn = document.querySelector('#start');
 const stopBtn = document.querySelector('#stop');
+const clearBtn = document.querySelector('#clear');
 
 chrome.omnibox.onInputEntered.addListener(function getDomain(text) {
   console.log(text);
 });
+
+const trashSample = new Tone.Player('trashEdit.wav').toMaster();
 
 const bassSynth = new Tone.MembraneSynth({
   envelope: {
@@ -30,18 +33,9 @@ midSynth.connect(panVol);
 const midSynth2 = new Tone.MembraneSynth();
 midSynth2.connect(panVol2);
 
-const noiseSynth = new Tone.NoiseSynth({
-  noise: {
-    type: 'pink'
-  }
-});
-
-const vol = new Tone.Volume(-10);
-
-noiseSynth.chain(vol, Tone.Master);
-
+// const oscVol = new Tone.Volume(-5).toMaster();
 const osc = new Tone.OmniOscillator();
-
+// osc.connect(oscVol);
 osc.toMaster();
 
 const metal = new Tone.MetalSynth({
@@ -54,7 +48,12 @@ const metal = new Tone.MetalSynth({
 }).toMaster();
 
 function onAllCookies(cookies) {
-  console.log('all cookies', cookies.length, cookies);
+  // console.log('all cookies', cookies.length, cookies);
+  const allCookies = cookies.length;
+  const allCookieString = allCookies.toString();
+
+  osc.frequency.value = 40;
+  // console.log(allCookieString);
 
   const secureCookies = cookies.filter(c => c.secure);
 
@@ -64,7 +63,7 @@ function onAllCookies(cookies) {
   const longlivedCookies = cookies.filter(c => c.expirationDate > weekOut);
   const shortLivedCookies = cookies.filter(c => c.expirationDate < weekOut);
 
-  console.log(shortLivedCookies, longlivedCookies);
+  // console.log(shortLivedCookies, longlivedCookies);
 
   metal.frequency.value = cookies.length * 20;
   metal.modulationIndex.value =
@@ -72,7 +71,7 @@ function onAllCookies(cookies) {
   metal.triggerAttackRelease();
 
   let midTime = new Tone.Time('+0');
-  // let midTimeKeeper = 0;
+  let midTimeKeeper = 0;
   cookies.forEach(c => {
     if (c.session) {
       panVol.pan.value = 1;
@@ -81,58 +80,135 @@ function onAllCookies(cookies) {
         0.25,
         midTime
       );
-      console.log('pan right');
+      // console.log('pan right');
       midTime += 0.25;
-      // midTimeKeeper += 500;
+      midTimeKeeper += 500;
     }
   });
 
   let otherTime = new Tone.Time('+0.125');
-  // let otherTimeKeeper = 0;
+  let otherTimeKeeper = 0;
   cookies.forEach(c => {
     panVol2.pan.value = -1;
     panVol2.volume.value = -10;
-    console.log(c.hostOnly);
+    // console.log(c.hostOnly);
     midSynth2.triggerAttackRelease(
       cookies.length + c.domain.length,
       0.125,
       otherTime
     );
-    console.log('pan left');
+    // console.log('pan left');
     otherTime += 0.125;
-    // otherTimeKeeper += 500;
+    otherTimeKeeper += 500;
   });
 
   let bassTime = new Tone.Time('+0');
   let bassTimeKeeper = 0;
   cookies.forEach(c => {
-    console.log(c.domain, c.secure);
+    // console.log(c.domain, c.secure);
     bassSynth.triggerAttackRelease(c.secure + c.domain.length, 0.125, bassTime);
     bassTime += 0.125;
-    bassTimeKeeper += 125;
+    bassTimeKeeper += 188;
   });
 
-  const bassRest = bassTimeKeeper * 1.5;
+  let bassRest;
 
-  const allCookies = cookies.length;
+  if (bassTimeKeeper <= 0) {
+    bassRest = 1000;
+  } else {
+    bassRest = bassTimeKeeper;
+  }
 
-  osc.frequency.value = 60;
-  console.log(allCookies);
-  osc.start().stop(allCookies);
-
-  console.log('secure cookies', secureCookies.length, secureCookies);
+  // console.log('secure cookies', secureCookies.length, secureCookies);
 
   timer = setTimeout(requestAllCookies, bassRest);
   function timerStop() {
-    clearInterval(timer);
+    clearTimeout(timer);
     console.log('stopping');
+    startBtn.disabled = false;
   }
   stopBtn.addEventListener('click', timerStop);
+  osc.start('+0').stop(`+${allCookieString}`);
 }
+stopBtn.addEventListener('click', osc.stop());
 
 function requestAllCookies() {
+  this.disabled = true;
+  stopBtn.disabled = false;
   console.log('request all cookies');
   chrome.cookies.getAll({}, onAllCookies);
 }
 
 startBtn.addEventListener('click', requestAllCookies);
+
+function CookieCache() {
+  this.cookies_ = {};
+
+  this.reset = function() {
+    this.cookies_ = {};
+  };
+
+  this.add = function(cookie) {
+    let domain = cookie.domain;
+    if (!this.cookies_[domain]) {
+      this.cookies_[domain] = [];
+    }
+    this.cookies_[domain].push(cookie);
+  };
+
+  this.remove = function(cookie) {
+    let domain = cookie.domain;
+    if (this.cookies_[domain]) {
+      let i = 0;
+      while (i < this.cookies_[domain].length) {
+        if (cookieMatch(this.cookies_[domain][i], cookie)) {
+          this.cookies_[domain].splice(i, 1);
+        } else {
+          i += 1;
+        }
+      }
+      if (this.cookies_[domain].length == 0) {
+        delete this.cookies_[domain];
+      }
+    }
+  };
+}
+
+this.getDomains = function(filter) {
+  const result = [];
+  sortedKeys(this.cookies_).forEach(function(domain) {
+    if (!filter || domain.indexOf(filter) != -1) {
+      result.push(domain);
+    }
+  });
+  return result;
+};
+
+function removeCookie(cookie) {
+  let url =
+    'http' + (cookie.secure ? 's' : '') + '://' + cookie.domain + cookie.path;
+  chrome.cookies.remove({ url: url, name: cookie.name });
+}
+
+const cache = new CookieCache();
+
+function removeAll() {
+  chrome.cookies.getAll({}, function(cookies) {
+    for (let i in cookies) {
+      cache.add(cookies[i]);
+      removeCookie(cookies[i]);
+    }
+  });
+  chrome.cookies.getAll({}, cookies => {
+    document.querySelector(
+      '#cookiesCleared'
+    ).textContent = `All cookies have been deleted.`;
+    document.querySelector('#cookiesCleared').style.visibility = 'visible';
+    setTimeout(function() {
+      document.querySelector('#cookiesCleared').style.visibility = 'hidden';
+    }, 2500);
+    trashSample.start();
+  });
+}
+
+clearBtn.addEventListener('click', removeAll);

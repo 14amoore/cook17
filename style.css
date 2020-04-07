@@ -1,0 +1,28 @@
+@import url('https://use.typekit.net/vrj7vyn.css');
+
+#cookiesCleared {
+  visibility: hidden;
+}
+
+body {
+  font-family: 'mono45-headline', monospace;
+  font-style: normal;
+  background: hsl(282, 100%, 0%);
+  color: hsl(300, 100%, 100%);
+}
+
+h1 {
+  margin: 0;
+}
+
+h2 {
+  margin-bottom: 0;
+}
+
+a {
+  color: hsl(300, 100%, 100%);
+}
+
+a:hover {
+  color: hsl(295, 100%, 77%);
+}
