@@ -119,6 +119,8 @@ a:hover {
 
 #cookiesCleared {
   visibility: hidden;
+  margin: 0em 4em 0em 4em;
+  font-size: 2em;
 }
 
 #buttons {
