@@ -22,14 +22,13 @@ const bassSynth = new Tone.MembraneSynth({
     release: 1,
     releaseCurve: 'ripple'
   }
-}).toMaster();
+});
 
-const panVol = new Tone.PanVol().toMaster();
-const panVol2 = new Tone.PanVol().toMaster();
+const panVol = new Tone.PanVol();
+const panVol2 = new Tone.PanVol();
 
 const midSynth = new Tone.MembraneSynth();
 midSynth.connect(panVol);
-
 const midSynth2 = new Tone.MembraneSynth();
 midSynth2.connect(panVol2);
 
@@ -45,14 +44,34 @@ const metal = new Tone.MetalSynth({
     release: 1
   },
   octaves: 2.5
-}).toMaster();
+});
+
+function oscStop() {
+  osc.stop();
+}
+
+function allStop() {
+  bassSynth.disconnect();
+  panVol.disconnect();
+  panVol2.disconnect();
+  metal.disconnect();
+}
+
+function allConnect() {
+  bassSynth.toMaster();
+  panVol.toMaster();
+  panVol2.toMaster();
+  metal.toMaster();
+}
+
+startBtn.addEventListener('click', allConnect);
 
 function onAllCookies(cookies) {
   // console.log('all cookies', cookies.length, cookies);
   const allCookies = cookies.length;
   const allCookieString = allCookies.toString();
 
-  osc.frequency.value = 40;
+  osc.frequency.value = 60;
   // console.log(allCookieString);
 
   const secureCookies = cookies.filter(c => c.secure);
@@ -126,9 +145,11 @@ function onAllCookies(cookies) {
     clearTimeout(timer);
     console.log('stopping');
     startBtn.disabled = false;
+    location.reload();
   }
   stopBtn.addEventListener('click', timerStop);
-  stopBtn.addEventListener('click', osc.stop());
+  stopBtn.addEventListener('click', oscStop);
+  stopBtn.addEventListener('click', allStop);
   osc.start('+0').stop(`+${allCookieString}`);
 }
 
@@ -212,3 +233,26 @@ function removeAll() {
 }
 
 clearBtn.addEventListener('click', removeAll);
+
+function newSite() {
+  const rawAddress = document.querySelector('#nav').value;
+  // console.log(rawAddress);
+  const address = `https://www.${rawAddress}`;
+  const tab = window.open(address, '_blank');
+  tab.focus();
+}
+
+document.querySelector('#submit').addEventListener('click', newSite);
+
+function clearAddress() {
+  document.querySelector('#nav').value = '';
+}
+
+function logKey(e) {
+  if (e.code === 'Enter') {
+    newSite();
+    clearAddress();
+  }
+}
+
+document.querySelector('#nav').addEventListener('keydown', logKey);

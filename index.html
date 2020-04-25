@@ -5,30 +5,62 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>Cookie Test 17</title>
     <script src="Tone.js"></script>
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="extensionStyle.css" />
   </head>
   <body>
-    <h1>Listen!</h1>
-    <h2>
-      <button id="start" type="button">Log It</button>
-      <button id="stop" type="button">Stop It</button>
-      <button id="clear" type="button">Clear Cookies</button>
-    </h2>
     <div>
-      <p id="cookiesCleared">Place Holder Text</p>
-    </div>
-    <div>
-      <h3>
-        <a href="https://www.google.com/" target="_blank">Google</a>
-        <a href="https://www.reddit.com/" target="_blank">Reddit</a>
-        <a href="https://www.facebook.com/" target="_blank">FaceBook</a>
-        <a href="https://www.vogue.com/" target="_blank">Vogue</a>
-        <a href="https://techcrunch.com/" target="_blank">TechCrunch</a>
-        <a href="http://compform.net/" target="_blank"
-          >Parsons Computational Form Class Website</a
-        >
-      </h3>
-    </div>
+      <h1>Hi! Thank you for downloading my chrome extension.</h1>
+      <h2>
+        Please make sure to turn the volume on your computer down very low and
+        click the button marked "clear cookies" before using this extension.
+        Some of the sounds can be quite loud and I want this experience to be a
+        pleasant one. Once you've cleared your cookie cache click "Listen", and
+        either click one of the six provided website links, or enter one of your
+        own in the field below.
+      </h2>
+      <div id="buttons">
+        <h4>
+          <button class="myButton" id="clear" type="button">
+            Clear Cookies
+          </button>
+          <button class="myButton" id="start" type="button">Listen</button>
+          <button class="myButton" id="stop" type="button">Stop</button>
+        </h4>
+      </div>
+      <div>
+        <p id="cookiesCleared">Place Holder Text</p>
+      </div>
+      <div id="links">
+          <a href="https://www.google.com/" target="_blank">Google</a>,
+          <a href="https://www.reddit.com/" target="_blank">Reddit</a>,
+          <a href="https://www.facebook.com/" target="_blank">FaceBook</a>,
+          <a href="https://www.vogue.com/" target="_blank">Vogue</a>,
+          <a href="https://techcrunch.com/" target="_blank">TechCrunch</a>,
+          <a href="http://compform.net/" target="_blank">CompForm</a>.
+      </div>
+      <div id="navDiv">
+        <label for="nav">Enter web address here:</label>
+        <input
+          type="url"
+          name="nav"
+          id="nav"
+          placeholder="example.com"
+          pattern="https://.*"
+          required
+        />
+        <button id="submit" type="button">Go!</button>
+      </div>
+      <div>
+        <h2>
+          This extension uses the http cookies installed on your computer by the
+          websites you visit to dynamically generate a soundscape.
+          <a href="https://www.adamoore.net/thesis.html">Here</a> is a link to
+          further explanation of what each sound in the composition signifies.
+        </h2>
+      </div>
+      <div>
+        <h2>Thanks for listening.</h2>
+      </div>
     <script src="cook17.js"></script>
   </body>
 </html>
