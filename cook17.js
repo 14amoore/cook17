@@ -23,18 +23,22 @@ const bassSynth = new Tone.MembraneSynth({
     releaseCurve: 'ripple'
   }
 });
+bassSynth.volume.value = -15;
 
 const panVol = new Tone.PanVol();
 const panVol2 = new Tone.PanVol();
 
 const midSynth = new Tone.MembraneSynth();
+midSynth.volume.value = -20;
 midSynth.connect(panVol);
 const midSynth2 = new Tone.MembraneSynth();
+midSynth2.volume.value = -20;
 midSynth2.connect(panVol2);
 
 // const oscVol = new Tone.Volume(-5).toMaster();
 const osc = new Tone.OmniOscillator();
 // osc.connect(oscVol);
+osc.volume.value = -20;
 osc.toMaster();
 
 const metal = new Tone.MetalSynth({
@@ -45,6 +49,7 @@ const metal = new Tone.MetalSynth({
   },
   octaves: 2.5
 });
+metal.volume.value = -20;
 
 function oscStop() {
   osc.stop();
@@ -160,7 +165,16 @@ function requestAllCookies() {
   chrome.cookies.getAll({}, onAllCookies);
 }
 
+function visualCue() {
+  document.querySelector('#cookiesCleared').textContent = `Listen closely.`;
+  document.querySelector('#cookiesCleared').style.visibility = 'visible';
+  setTimeout(function() {
+    document.querySelector('#cookiesCleared').style.visibility = 'hidden';
+  }, 5000);
+}
+
 startBtn.addEventListener('click', requestAllCookies);
+startBtn.addEventListener('click', visualCue);
 
 function CookieCache() {
   this.cookies_ = {};

@@ -2,7 +2,6 @@
 
 body {
   font-family: 'mono45-headline', monospace;
-  font-style: normal;
   font-size: 20px;
   background: hsl(282, 100%, 0%);
   color: hsl(300, 100%, 100%);
@@ -10,23 +9,27 @@ body {
 
 h1 {
   padding: 0em 0em 0.25em 0em;
-  margin: 0 2em 0 2em;
+  margin: 0 5em 0 5em;
   font-size: 4em;
+  font-weight: normal;
 }
 
 h2 {
-  margin: 0em 4em 0 4em;
+  margin: 0em 10em 1em 10em;
   font-size: 2em;
+  font-weight: normal;
 }
 
 h3 {
-  margin: 0em 3em 0em 3em;
+  margin: 0em 10em 0em 10em;
   font-size: 1em;
+  font-weight: normal;
 }
 
 h4 {
   margin: 0em 2.75em 0em 3em;
   font-size: 1em;
+  font-weight: normal;
 }
 
 p {
@@ -35,6 +38,7 @@ p {
 
 label {
   margin: 0em 0em 1em 1.25em;
+  font-weight: normal;
 }
 
 input {
@@ -60,8 +64,8 @@ a:hover {
   cursor: pointer;
   color: #343434;
   font-family: 'mono45-headline', monospace;
-  font-size: 0.75em;
-  font-weight: bold;
+  font-size: 0.8em;
+  font-weight: normal;
   padding: 6px 24px;
   text-decoration: none;
   text-shadow: 0px 1px 0px #ffffff;
@@ -76,12 +80,12 @@ a:hover {
 }
 
 #links {
-  margin: 1em 4.5em 1em 5em;
+  margin: 1em 12.5em 1em 12.5em;
   font-size: 1.6em;
 }
 
 #navDiv {
-  margin: 1em 2em 1em 4.5em;
+  margin: 1em 12em 1em 13em;
   font-size: 1.4em;
 }
 
@@ -95,8 +99,8 @@ a:hover {
   cursor: pointer;
   color: #343434;
   font-family: 'mono45-headline', monospace;
-  font-size: 0.7em;
-  font-weight: bold;
+  font-size: 0.6em;
+  font-weight: normal;
   padding: 3px 22px;
   margin: 0px;
   text-decoration: none;
@@ -118,20 +122,75 @@ a:hover {
 }
 
 #cookiesCleared {
-  visibility: hidden;
-  margin: 0em 4em 0em 4em;
+  /* visibility: hidden; */
+  margin: 0em 10em 0em 10em;
   font-size: 2em;
 }
 
 #buttons {
-  margin: 1em 5em 1em 5em;
+  margin: 1em 17em 1em 17em;
 }
 
-@media only screen and (min-width: 375px) and (max-width: 812px) and (-webkit-device-pixel-ratio: 3) {
+@media only screen and (min-width: 813px) and (max-width: 1000px) {
   h1 {
-    margin: none;
+    font-size: 3em;
+    margin: 0.15em;
   }
   h2 {
-    margin: 0em;
+    font-size: 2em;
+    margin: 0.25em;
+  }
+  h4 {
+    margin: 0.5em;
+  }
+  label {
+    margin: 0;
+  }
+  #buttons {
+    margin: 0;
+    padding: 0;
+  }
+  #cookiesCleared {
+    margin: 0.3em;
+  }
+  #links {
+    margin: 0.4em;
+    font-size: 1.6em;
+  }
+  #navDiv {
+    margin: 0.4em;
+    font-size: 1.4em;
+  }
+}
+
+@media only screen and (min-width: 375px) and (max-width: 812px) {
+  h1 {
+    font-size: 3em;
+    margin: 0.15em;
+  }
+  h2 {
+    font-size: 2em;
+    margin: 0.25em;
+  }
+  h4 {
+    margin: 0.5em;
+  }
+  label {
+    margin: 0;
+  }
+  #buttons {
+    margin: 0;
+    padding: 0;
+  }
+  #cookiesCleared {
+    margin: 0.3em;
+  }
+  #links {
+    margin: 0.4em;
+    font-size: 1.6em;
+  }
+  #navDiv {
+    margin: 0.4em;
+    font-size: 1.4em;
   }
 }
